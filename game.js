@@ -14,18 +14,24 @@ class Game{
         })
     }
 
-    start(){
+    async start(){
         if(gameS === 0){
             player = new Player();
             player.getPlayerCount();
           
+            var tempPC = await database.ref("playerCount").once("value");
+            if(tempPC.exists()){
+                playerC = tempPC.val();
+                player.getPlayerCount();
+            }
+
             form = new Form();
             form.display();
         }
         bg = createSprite(width/2,height/2,width,height);
         bg.addImage(bgImg);
-        bg.scale = 1.5
-        bg.y = height/2
+       // bg.scale = 1.5
+        bg.y = bg.height/2;
         astro1 = createSprite(300,700,10,10);
         astro1.addImage(astroImg);
         astro1.scale = 0.1
@@ -38,30 +44,32 @@ class Game{
     play(){
         form.hide();
         player.getAllPlayerDetails();
+        var startingX;
         if(allPlayers){
             bg.velocityY = -2;
-                if(bg.y<150){
-                 bg.y = height/2
+                if(bg.y<0){
+                 bg.y = bg.height/2;
                 }   
 
-                var y = 700
-                var x = 300 
+                var y=550;
+                var x; 
                 var i = 0
                 for(var plr in allPlayers){
-                    y = 700;
-                    x = width-allPlayers[plr].distance;
+                    x = allPlayers[plr].startingX-allPlayers[plr].Distance;
+                    //console.log(x);
                     astro[i].x = x 
                     astro[i].y = y
-                    console.log(astro[i])
+                   // console.log(astro[i])
+                   
                     i=i+1
                 }
 
-            if(keyDown("LEFT_ARROW")){
+            if(keyDown("LEFT_ARROW") && player.index!=null){
                 player.distance = player.distance+10;
                 player.updatePlayerDetails();
             }
 
-            if(keyDown("RIGHT_ARROW")){
+            if(keyDown("RIGHT_ARROW")  && player.index!=null){
                 player.distance = player.distance-10;
                 player.updatePlayerDetails();
             }

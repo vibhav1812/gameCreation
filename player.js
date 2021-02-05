@@ -4,6 +4,7 @@ class Player{
         this.name = null;
         this.lives = 10;
         this.distance = 0;
+        this.startingX = 300;
     }
 
     setPlayerCount(count){
@@ -19,11 +20,15 @@ class Player{
     }
 
     updatePlayerDetails(){
-        var path = "players/player"+ this.index
+        var path = "players/player"+ this.index;
+        if(this.index===2){
+            this.startingX = 1000;
+        }
         database.ref(path).set({
             Name : this.name,
             Lives : this.lives,
-            Distance : this.distance
+            Distance : this.distance,
+            startingX : this.startingX
         })
     }
 
